@@ -1,0 +1,160 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="/media/css/sticky-footer.css">
+    <title>{% trans "Mabion S.A. Enzyme Calculator" %}</title>
+  </head>
+  <body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+            <a class="navbar-brand" href="/">
+                <img src="/media/mabion_logo.png" height="40" alt="Mabion S.A.">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item{% if about_active %} active{% endif %}">
+                        <a class="nav-link" href="/">{% trans "About" %} <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item{% if home_active %} active{% endif %}">
+                        <a class="nav-link" href="/calculator">{% trans "Calculator" %}</a>
+                    </li>
+                </ul>
+
+</form>
+
+            </div>
+        </nav>
+        {% block jumbo %}
+            <div class="jumbotron">
+                <h3 class="display-5 text-center">{% trans "Enzyme calculator for most optimal KEX 2 proteolysis." %}</h3>
+                <p class="lead text-center">{% blocktrans %}Mabion S.A. provides a <a href="/calculator">calculator</a> which calculates the ideal amount of enzyme needed during KEX 2 proteolysis.{% endblocktrans %}</p>
+                <p class="lead text-center">Podane wartości zakładają, że trawiony peptyd ma struktrę liniową. Przy istnieniu skomplikowanych struktur III-rzędowych, trawienie może być utrudnione. W przypadku rozbudowanych struktur białkowych w pierwszej kolejności peptydaza przetnie miejsca liniowe w białku. Aby sprawdzić strukture swojego peptydu skorzystaj z symulatora na stronie: <a href="https://www.proteinmodelportal.org/" target="_blank">https://www.proteinmodelportal.org/</a></p>
+            </div>
+        {% endblock %}
+        {% block content %}
+        <div class="row mx-2">
+            <form style="width: 100%;" class="mb-5" method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-md-5 text-center">
+                        <label for="bialko">{% trans "Enter the amount of protein for protolysis in mg" %}</label><br />
+                        <input type="number" class="form-control-lg" id="bialko" name="bialko" placeholder="{{bialko}}" value="{{bialko}}">
+                    </div>
+                    <div class="col-md-7 text-center">
+                        <label for="enzym"><strong>{% trans "For the optimal KEX 2 proteolysis, use the following amount of enzyme [mg]" %}</strong></label><br />
+                        <strong><input type="text" class="form-control-lg" id="enzym" value="{{enzym}}" readonly></strong>
+                    </div>
+                </div>
+                <br />
+                <hr />
+                <br />
+                <div class="form-row">
+                    <div class="form-group input-group mb-5 text-center col-md-5">
+                        <label for="procent" class="col-form-label col-sm-12">{% trans "Percent of active enzyme" %}</label>
+                        <input type="text" class="form-control" id="procent" name="procent" placeholder="{{procent}}" value="{{procent}}">
+                        <div class="input-group-append">
+                            <span class="input-group-text">%</span>
+                        </div>
+                        
+                    </div>
+                    <div class="form-group input-group mb-5 text-center col-md-5 offset-md-2">
+                        <label for="czas" class="col-form-label col-sm-12">{% trans "The duration of the proteolysis process" %}</label>
+                        <input type="text" class="form-control" id="czas" name="czas" placeholder="{{czas}}" value="{{czas}}">
+                        <div class="input-group-append">
+                            <span class="input-group-text">H</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group input-group mb-5 text-center col-md-5">
+                        <label for="trawienie" class="col-form-label col-sm-12">{% trans "Number of digestion places" %}</label>
+                        <input type="text" class="form-control" id="trawienie" name="trawienie" placeholder="{{trawienie}}" value="{{trawienie}}">
+                    </div>
+                    <div class="form-group input-group mb-5 text-center col-md-5 offset-md-2">
+                        <label for="temp" class="col-form-label col-sm-12">{% trans "The temperature of digestion" %}</label>
+                        <input type="text" class="form-control" id="temp" name="temp" placeholder="{{temp}}" value="{{temp}}" disabled>
+                        <div class="input-group-append">
+                            <span class="input-group-text">°C</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row mb-3">
+                    <div class="form-group input-group mb-5 text-center col-md-5">
+                        <label for="ph" class="col-form-label col-sm-12">{% trans "Reaction pH" %}</label>
+                        <select class="form-control" id='ph' name="ph">
+                          <option{% if ph == '7.4' %} selected{% endif %}>7.4</option>
+                          <option{% if ph == '7.7' %} selected{% endif %}>7.7</option>
+                        </select>
+                    </div>
+                    <div class="form-group input-group mb-5 text-center col-md-5 offset-md-2">
+                        <label for="nacl" class="col-form-label col-sm-12">{% trans "Concentration of NaCl" %}</label>
+                        <select class="form-control" id='nacl' name="nacl">
+                          <option{% if nacl == '200' %} selected{% endif %}>200</option>
+                          <option{% if nacl == '100' %} selected{% endif %}>100</option>
+                          <option{% if nacl == '50' %} selected{% endif %}>50</option>
+                          <option{% if nacl == '25' %} selected{% endif %}>25</option>
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">mM</span>
+                        </div>
+                        <!--label for="trawienie" class="col-form-label col-sm-12">Ilość miejsc trawienia</label>
+                        <input type="text" class="form-control" id="czas" placeholder="3" value="3"-->
+                    </div>
+                </div>
+                <div class="form-row mb-3">
+                    <div class="form-group input-group mb-5 text-center col-md-5">
+                        <label for="kcl" class="col-form-label col-sm-12">{% trans "Concentration of KCl" %}</label>
+                        <select class="form-control" id='kcl' name="kcl">
+                          <option{% if kcl == '25' %} selected{% endif %}>25</option>
+                          <option{% if kcl == '50' %} selected{% endif %}>50</option>
+                          <option{% if kcl == '100' %} selected{% endif %}>100</option>
+                          <option{% if kcl == '200' %} selected{% endif %}>200</option>
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">mM</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group input-group mb-5 text-center col-md-12">
+                        <label for="line" class="col-form-label col-sm-12">Jeżeli chcesz poznać miejsca trawienia peptydu o strukturze liniowej prowadź go poniżej</label>
+                        <textarea class="form-control" id="line" name="line">{{line}}</textarea><br />
+                        <small id="lineHelp" class="form-text text-muted col-12">Wprowadzony peptyd powienien mieć formę AABBCC np.: MALWMRLLPL(...)NYCN; Miejsca cięcia zostaną poniżej zaznaczone na czerwono.</small>
+                    </div>
+                </div>
+                {% if line_n %}
+                <div class="row mb-3">
+                    <div class="col-12">
+                       {{ line_n|safe }}
+                    </div>
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">Oblicz</button>
+            </form>
+        </div>
+        {% endblock %}
+</div>
+        <footer class="footer">
+            <div class="container text-center">
+                <span class="text-muted">Powered by Django and Bootstrap. Created by <a href="https://www.mabion.eu">Mabion S.A.</a> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL v3.0</a></span>
+            </div>
+        </footer>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  </body>
+</html>
